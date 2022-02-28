@@ -1,82 +1,96 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
+using System.IO;
 
-namespace TaskManager
+namespace ConsoleApp7
 {
     class Program
     {
-        static Process findById(int id)
-        {
-            foreach (Process process in Process.GetProcesses())
-            {
-                // выводим id и имя процесса
-                if (process.Id == id) return process;
-            }
-            return null;
-        }
-
-        static Process findByName(string name)
-        {
-            foreach (Process process in Process.GetProcesses())
-            {
-                // выводим id и имя процесса
-                if (process.ProcessName.Contains(name)) return findById(process.Id);
-            }
-            return null;
-        }
-
-        static void printProcesses()
-        {
-            foreach (Process process in Process.GetProcesses())
-            {
-                // выводим id и имя процесса
-                Console.WriteLine($"ID: {process.Id}  Name: {process.ProcessName}");
-            }
-        }
-
         static void Main(string[] args)
         {
-           
-            
-            Console.WriteLine("--------------------------------------------------");
+            string path = @"C:\aaaaa\fuck\"; //Directory.GetCurrentDirectory();
+            gui g1 = new gui(0, 0, 50, 30);
+            gui g2 = new gui(52, 0, 50, 30);
+            gui g3 = new gui(0, 31, 102, 6);
+
+            int page = 0;
+            /*foreach(string s in files)
+            {
+                Console.WriteLine(s.Split(@"\")[^1]);
+            }*/
 
             while (true)
             {
-                Console.WriteLine("Доступные команды: ");
-                Console.WriteLine("1 - Вывести все процессы.");
-                Console.WriteLine("2 - Найти процесс по имени");
-                Console.WriteLine("3 - Найти процесс по ID");
-                Console.WriteLine("4 - Убить процесс (по ID)");
-                Console.WriteLine("0 - Выход");
-                int inp = int.Parse(Console.ReadLine());
-                if (inp == 0) break;
-                if (inp == 1)printProcesses();
-                if (inp == 2)
+                g1.draw();
+                g2.draw();
+                g3.draw();
+
+                var dirs = Directory.GetDirectories(path);
+                var files = Directory.GetFiles(path);
+
+                g1.drawRel(2, 0, path);
+                //Console.WriteLine(dirs.Length);
+                for (int i = page * 28; i < Math.Min(dirs.Length, (page + 1) * 28); i++)
                 {
-                    string arg = Console.ReadLine();
-                    Process process = findByName(arg);
-                    Console.WriteLine($"ID: {process.Id}  Name: {process.ProcessName}");
+                    g1.drawRel(2, 1 + i - page * 28, dirs[i].Split(@"\")[^1]);
                 }
-                if (inp == 3)
+
+                for (int i = 0; i < files.Length; i++)
                 {
-                    int arg = int.Parse(Console.ReadLine());
-                    Process process = findById(arg);
-                    Console.WriteLine($"ID: {process.Id}  Name: {process.ProcessName}");
+                    g2.drawRel(2, 1 + i, files[i].Split(@"\")[^1]);
                 }
-                if (inp == 4)
+
+
+                g3.drawRel(1, 3, "-->");
+                Console.SetCursorPosition(4, 34);
+                string inp = Console.ReadLine();
+                string[] argv = inp.Split();
+
+                if (argv[0] == "exit") break;
+                if (argv[0] == "md")Directory.CreateDirectory(path + @"\" + argv[1]);
+                if (argv[0] == "cd") {
+                    if (argv[1] == "..")
+                    {
+                        path = path.Substring(0, path.Length - path.Split(@"\")[^2].Length - 1);
+                    }
+                    else if (!argv[1].Contains(@"\"))
+                    {
+                        //Console.WriteLine("sdfsdfsfsdfsd");
+                        bool f = false;
+                        for (int i = 0; i < dirs.Length; i++)
+                        {
+                            if(dirs[i].Split(@"\")[^1] == argv[1])
+                            {
+                                f = true;
+                                break;
+                            }
+                        }
+                        if (f) path = path + argv[1] + @"\";
+                        else {
+                            if (argv[1].Contains("C:"))path = argv[1] + @"\";
+                            else path = @"C:\" + argv[1] + @"\";
+                        }
+                    }
+                    else
+                    {
+                        if (argv[1].Contains("C:")) path = argv[1] + @"\";
+                        else path = @"C:\" + argv[1] + @"\";
+                    }
+                }
+                if (argv[0] == "deldir") {
+                    Directory.Delete(path + @"\" + argv[1]);
+                }
+                if (argv[0] == "delf") {
+                    File.Delete(path + @"\" + argv[1]);
+                }
+                if (argv[0] == "next")
                 {
-                    int arg = int.Parse(Console.ReadLine());
-                    Process process = findById(arg);
-                    string name = process.ProcessName;
-                    int pid = process.Id;
-                    process.Kill();
-                    Console.WriteLine($"Killed proccess {name}, ID: {pid}");
+                    page++;
                 }
-                Console.WriteLine("---------------------------------------");
+                if (argv[0] == "prev")
+                {
+                    page = Math.Max(0, page - 1);
+                }
+                Console.Clear();
             }
         }
     }
