@@ -7,7 +7,8 @@ namespace ConsoleApp7
     {
         static void Main(string[] args)
         {
-            string path = @"C:\aaaaa\fuck\"; //Directory.GetCurrentDirectory();
+            Console.SetWindowSize(103, 40);
+            string path = @"C:\"; //Directory.GetCurrentDirectory();
             gui g1 = new gui(0, 0, 50, 30);
             gui g2 = new gui(52, 0, 50, 30);
             gui g3 = new gui(0, 31, 102, 6);
@@ -36,7 +37,14 @@ namespace ConsoleApp7
 
                 for (int i = 0; i < files.Length; i++)
                 {
-                    g2.drawRel(2, 1 + i, files[i].Split(@"\")[^1]);
+                    long ln = new System.IO.FileInfo(path + @"\" + files[i].Split(@"\")[^1]).Length;
+                    String s = files[i].Split(@"\")[^1];
+                    int leng = s.Length;
+                    for(int j = 0; j < 20 - leng; j++)
+                    {
+                        s += " ";
+                    }
+                    g2.drawRel(2, 1 + i, s + "\t" + ln + " bytes.");
                 }
 
 
@@ -46,7 +54,9 @@ namespace ConsoleApp7
                 string[] argv = inp.Split();
 
                 if (argv[0] == "exit") break;
+                if (argv[0] == "help") break;
                 if (argv[0] == "md")Directory.CreateDirectory(path + @"\" + argv[1]);
+                if (argv[0] == "mf")File.Create(path + @"\" + argv[1]);
                 if (argv[0] == "cd") {
                     if (argv[1] == "..")
                     {
