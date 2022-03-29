@@ -57,10 +57,11 @@ namespace ConsoleApp7
                 if (argv[0] == "help") break;
                 if (argv[0] == "md")Directory.CreateDirectory(path + @"\" + argv[1]);
                 if (argv[0] == "mf")File.Create(path + @"\" + argv[1]);
+                if (argv[0] == "") break;
                 if (argv[0] == "cd") {
                     if (argv[1] == "..")
                     {
-                        path = path.Substring(0, path.Length - path.Split(@"\")[^2].Length - 1);
+                        if(path != @"C:\")path = path.Substring(0, path.Length - path.Split(@"\")[^2].Length - 1);
                     }
                     else if (!argv[1].Contains(@"\"))
                     {
