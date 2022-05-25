@@ -30,12 +30,12 @@ void Player::setLives(int lives)
 	this->lives = lives;
 }
 
-bool Player::move(float dx, float dy, std::vector<Wall>* walls)
+bool Player::move(float dx, float dy, std::vector<Wall>& walls)
 {
 	x += dx;
 	y += dy;
-	for (int i = 0; i < walls->size(); i++) {
-		if (check_collision(&walls[i])) {
+	for (int i = 0; i < walls.size(); i++) {
+		if (check_collision(walls[i])) {
 			x -= dx;
 			y -= dy;
 			return true;
@@ -54,5 +54,5 @@ Player::Player(float x, float y, int lives, wchar_t* screen)
 	this->screen = screen;
 	dead = false;
 	width = 5;
-	height = 5;
+	height = 3;
 }

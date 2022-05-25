@@ -8,14 +8,14 @@
 int nScreenWidth = 120;			// Console Screen Size X (columns)
 int nScreenHeight = 40;			// Console Screen Size Y (rows)
 int nMapWidth = 16;				// World Dimensions
-int nMapHeight = 16;
+int nMapHeight = 7;
 float fPlayerX = 14.7f;			// Player Start Position
 float fPlayerY = 5.09f;
 float fPlayerA = 0.0f;			// Player Start Rotation
 float fFOV = 3.14159f / 4.0f;	// Field of View
 float fDepth = 16.0f;			// Maximum rendering distance
 float fSpeed = 50.0f;			// Walking Speed
-float fGravity = 10.0f;
+float fGravity = 60.0f;
 float fGravVel = 0.0f;
 using namespace std;
 int main()
@@ -28,23 +28,14 @@ int main()
 
 	// Create Map of world space # = wall block, . = space
 	wstring map;
-	map += L"#########.......";
-	map += L"#...............";
-	map += L"#.......########";
-	map += L"#..............#";
 	map += L"#......##......#";
 	map += L"#......##......#";
-	map += L"#..............#";
 	map += L"###............#";
 	map += L"##.............#";
-	map += L"#......####..###";
-	map += L"#......#.......#";
-	map += L"#......#.......#";
-	map += L"#..............#";
 	map += L"#......#########";
 	map += L"#@.............#";
 	map += L"################";
-
+	
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
 	int c = 0;
@@ -52,9 +43,18 @@ int main()
 	Player player(5, 0, 3, screen);
 	//Wall wall(11, 10, 5, 5, screen);
 	vector<Wall> walls;
-	walls.push_back(Wall(5, 35, 5, 5, screen));
-	walls.push_back(Wall(10, 35, 5, 5, screen));
-	walls.push_back(Wall(15, 35, 5, 5, screen));
+	for (int nx = 0; nx < nMapWidth; nx++)
+		for (int ny = 0; ny < nMapHeight; ny++)
+		{
+			if (map[ny * nMapWidth + nx] == '#') {
+				walls.push_back(Wall(nx * 5, ny * 4, 5, 4, screen));
+			}
+
+		}
+	/*walls.push_back(Wall(5, 20, 5, 5, screen));
+	walls.push_back(Wall(10, 20, 5, 5, screen));
+	walls.push_back(Wall(15, 20, 5, 5, screen));
+	walls.push_back(Wall(20, 20, 5, 5, screen));*/
 	while (1)
 	{
 		// We'll need time differential per frame to calculate modification
@@ -68,49 +68,27 @@ int main()
 
 		// Handle CCW Rotation
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
-			player.move(-fSpeed * fElapsedTime, 0, &wall);
+			player.move(-fSpeed * fElapsedTime, 0, walls);
 			//fPlayerA -= (fSpeed * 0.75f) * fElapsedTime;
 
 		// Handle CW Rotation
 		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
-			player.move(fSpeed * fElapsedTime, 0, &wall);
+			player.move(fSpeed * fElapsedTime, 0, walls);
 			//fPlayerA += (fSpeed * 0.75f) * fElapsedTime;
 
 		// Handle Forwards movement & collision
 		if (GetAsyncKeyState((unsigned short)'W') & 0x8000)
 		{
 			//player.move(0, -fSpeed * fElapsedTime);
-			fGravVel = -200;
-			/*fPlayerX += sinf(fPlayerA) * fSpeed * fElapsedTime;;
-			fPlayerY += cosf(fPlayerA) * fSpeed * fElapsedTime;;
-			if (map.c_str()[(int)fPlayerX * nMapWidth + (int)fPlayerY] == '#')
-			{
-				fPlayerX -= sinf(fPlayerA) * fSpeed * fElapsedTime;;
-				fPlayerY -= cosf(fPlayerA) * fSpeed * fElapsedTime;;
-			}*/
+			//if(player)
+			fGravVel = -29;
+			
 		}
-		player.move(0, fGravVel * fElapsedTime, &wall);
-		// Handle backwards movement & collision
-		//if (GetAsyncKeyState((unsigned short)'S') & 0x8000)
-		//{
-		//	player.move(0, fSpeed * fElapsedTime);
-		//	/*fPlayerX -= sinf(fPlayerA) * fSpeed * fElapsedTime;;
-		//	fPlayerY -= cosf(fPlayerA) * fSpeed * fElapsedTime;;
-		//	if (map.c_str()[(int)fPlayerX * nMapWidth + (int)fPlayerY] == '#')
-		//	{
-		//		fPlayerX += sinf(fPlayerA) * fSpeed * fElapsedTime;;
-		//		fPlayerY += cosf(fPlayerA) * fSpeed * fElapsedTime;;
-		//	}*/
-		//}
+		player.move(0, fGravVel * fElapsedTime, walls);
+		
 
 		for (int x = 0; x < nScreenWidth; x++)
 		{
-			// For each column, calculate the projected ray angle into world space
-
-			// Incrementally cast ray from player, along ray angle, testing for 
-			// intersection with a block
-					// Ray is inbounds so test to see if the ray cell is a wall block
-			//if (map.c_str()[nTestX * nMapWidth + nTestY] == '#')
 
 			
 
@@ -134,10 +112,13 @@ int main()
 		// Display Stats
 		short nShade = ' ';
 		nShade = 0x2588;
-		swprintf_s(screen, 40, L"X=%3.2f, Y=%3.2f, A=%3.2f FPS=%3.2f ", fPlayerX, fPlayerY, fPlayerA, 1.0f / fElapsedTime);
+		//swprintf_s(screen, 40, L"X=%3.2f, Y=%3.2f, A=%3.2f FPS=%3.2f ", fPlayerX, fPlayerY, fPlayerA, 1.0f / fElapsedTime);
 		//screen[nScreenWidth + (c / 20 % nScreenWidth)] = nShade;
 		player.draw();
-		wall.draw();
+		for (Wall i: walls) {
+			i.draw();
+		}
+		//wall.draw();
 		fGravVel = min(fGravVel + fGravity * fElapsedTime, 250.0f);
 		// Display Map
 		/*for (int nx = 0; nx < nMapWidth; nx++)

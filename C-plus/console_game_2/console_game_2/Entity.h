@@ -8,8 +8,8 @@ protected:
 	int width, height;
 	bool dead;
 	wchar_t* screen;
-	bool check_collision(Entity* entity);
-	bool check_collisions();
+	bool check_collision(Entity& entity);
+	virtual bool check_collisions();
 public:
 	float getX();
 	float getY();

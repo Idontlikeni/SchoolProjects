@@ -1,13 +1,13 @@
 #include "Entity.h"
-bool Entity::check_collision(Entity* entity)
+bool Entity::check_collision(Entity& entity)
 {
 	float selfx2 = x + width;
 	float selfy2 = y + height;
 
-	float x1 = entity->x;
-	float y1 = entity->y;
-	float x2 = entity->x + entity->width;
-	float y2 = entity->y + entity->height;
+	float x1 = entity.x;
+	float y1 = entity.y;
+	float x2 = entity.x + entity.width;
+	float y2 = entity.y + entity.height;
 	return (x < x2 && selfx2 > x1 && y < y2 && selfy2 > y1);
 }
 
@@ -29,7 +29,7 @@ float Entity::getY()
 void Entity::draw()
 {
 	short nShade = ' ';
-	nShade = 0x2593;
+	nShade = 0x2592;
 	for (int i = 0; i < height; i++)
 	{
 		for (int j = 0; j < width; j++) {
