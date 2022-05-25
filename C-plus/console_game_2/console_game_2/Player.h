@@ -6,7 +6,9 @@ private:
 	int lives, max_lives;
 	bool dead;
 	wchar_t* screen; 
+
 public:
+	short nShade;
 	int getLives();
 	void draw();
 	void die();

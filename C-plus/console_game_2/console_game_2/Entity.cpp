@@ -1,8 +1,8 @@
 #include "Entity.h"
 bool Entity::check_collision(Entity& entity)
 {
-	float selfx2 = x + width;
-	float selfy2 = y + height;
+	float selfx2 = x + width - 1;
+	float selfy2 = y + height - 1;
 
 	float x1 = entity.x;
 	float y1 = entity.y;

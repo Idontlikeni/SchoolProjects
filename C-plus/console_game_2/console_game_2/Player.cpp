@@ -7,17 +7,23 @@ int Player::getLives()
 
 void Player::draw()
 {
-	short nShade = 0x2588;
-	for (int i = 0; i < width; i++)
+	//nShade = 0x2588;
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++) {
+			screen[(i + (int)y) * 120 + j + (int)x] = nShade;
+		}
+	}
+	/*for (int i = 0; i < width; i++)
 	{
 		screen[((int)y) * 120 + (int)x + i] = nShade;
 		screen[((int)y + height - 1) * 120 + (int)x + i] = nShade;
 	}
-	for (int i = 1; i < height + 1; i++)
+	for (int i = 1; i < height - 1; i++)
 	{
 		screen[((int)y + i) * 120 + (int)x] = nShade;
 		screen[((int)y + i) * 120 + width - 1 +(int)x] = nShade;
-	}
+	}*/
 }
 
 void Player::die()
@@ -69,4 +75,5 @@ Player::Player(float x, float y, int lives, wchar_t* screen)
 	dead = false;
 	width = 5;
 	height = 3;
+	nShade = 0x2588;
 }

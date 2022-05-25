@@ -53,7 +53,7 @@ int main()
 	HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	SetConsoleActiveScreenBuffer(hConsole);
 	DWORD dwBytesWritten = 0;
-
+	bool in_air = false;
 	// Create Map of world space # = wall block, . = space
 	wstring map;
 	map += L"#......##......##......#";
@@ -63,7 +63,7 @@ int main()
 	map += L"#......#########.......#";
 	map += L"#......................#";
 	map += L"#......................#";
-	map += L"##########llll##########";
+	map += L"########################";
 	
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
@@ -116,12 +116,42 @@ int main()
 		// Handle Forwards movement & collision
 		if (GetAsyncKeyState((unsigned short)'W') & 0x8000)
 		{
-			//player.move(0, -fSpeed * fElapsedTime);
+			//player.move(0, -fSpeed * fElapsedTime, walls);
 			//if(player)
-			fGravVel = -39;
-			
+			//player.setY(player.getY() + 1);
+			if (player.check_collisions(walls)) { 
+				fGravVel = -39; 
+				in_air = true;
+			}
+			//player.setY(player.getY() - 1);
 		}
-		player.move(0, fGravVel * fElapsedTime, walls);
+
+		if (GetAsyncKeyState((unsigned short)'S') & 0x8000)
+		{
+			player.move(0, fSpeed * fElapsedTime, walls);
+		}
+
+		//player.setY(player.getY() + 1);
+		//if (player.check_collisions(walls))fGravVel = 0;
+		//player.setY(player.getY() - 1);
+
+		if (player.move(0, fGravVel * fElapsedTime, walls)) {
+  			player.nShade = 0x2592;
+			if (GetAsyncKeyState((unsigned short)'W') & 0x8000 || GetAsyncKeyState((unsigned short)' ') & 0x8000)
+			{
+				//player.move(0, -fSpeed * fElapsedTime, walls);
+				//if(player)
+				//player.setY(player.getY() + 1);
+				//if (player.check_collisions(walls)) {
+				fGravVel = -50;
+				in_air = true;
+				//}
+				//player.setY(player.getY() - 1);
+			}else fGravVel = 1;
+		}
+		else {
+			player.nShade = 0x2588;
+		}
 		
 
 		for (int x = 0; x < nScreenWidth; x++)
@@ -149,7 +179,7 @@ int main()
 		// Display Stats
 		short nShade = ' ';
 		nShade = 0x2588;
-		//swprintf_s(screen, 40, L"X=%3.2f, Y=%3.2f, A=%3.2f FPS=%3.2f ", fPlayerX, fPlayerY, fPlayerA, 1.0f / fElapsedTime);
+		swprintf_s(screen, 40, L"G=%3.2f, G=%3.2f, A=%3.2f FPS=%3.2f ", fGravVel, fGravVel, fPlayerA, 1.0f / fElapsedTime);
 		//screen[nScreenWidth + (c / 20 % nScreenWidth)] = nShade;
 		player.draw();
 		for (Wall i: walls) {
