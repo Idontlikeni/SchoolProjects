@@ -7,17 +7,45 @@
 #include "Player.h"
 int nScreenWidth = 120;			// Console Screen Size X (columns)
 int nScreenHeight = 40;			// Console Screen Size Y (rows)
-int nMapWidth = 16;				// World Dimensions
-int nMapHeight = 7;
+int nMapWidth = 24;				// World Dimensions
+int nMapHeight = 8;
 float fPlayerX = 14.7f;			// Player Start Position
 float fPlayerY = 5.09f;
 float fPlayerA = 0.0f;			// Player Start Rotation
 float fFOV = 3.14159f / 4.0f;	// Field of View
 float fDepth = 16.0f;			// Maximum rendering distance
 float fSpeed = 50.0f;			// Walking Speed
-float fGravity = 60.0f;
+float fGravity = 120.0f;
 float fGravVel = 0.0f;
 using namespace std;
+
+class Lava: public Wall
+{
+public:
+	void draw() {
+		short nShade = ' ';
+		nShade = 0x2591;
+		for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++) {
+				screen[(i + (int)y) * 120 + j + (int)x] = nShade;
+			}
+		}
+	}
+	Lava(float x, float y, int width, int height, wchar_t* screen) :Wall(x, y, width, height, screen) {}
+	
+};
+
+class Exit : public Entity
+{
+	Exit(float x, float y, int width, int height, wchar_t* screen) :Entity(x, y, width, height, screen) {}
+};
+
+class Point : public Entity
+{
+	Point(float x, float y, int width, int height, wchar_t* screen) :Entity(x, y, width, height, screen) {}
+};
+
 int main()
 {
 	// Create Screen Buffer
@@ -28,13 +56,14 @@ int main()
 
 	// Create Map of world space # = wall block, . = space
 	wstring map;
-	map += L"#......##......#";
-	map += L"#......##......#";
-	map += L"###............#";
-	map += L"##.............#";
-	map += L"#......#########";
-	map += L"#@.............#";
-	map += L"################";
+	map += L"#......##......##......#";
+	map += L"#......##......#.......#";
+	map += L"###............#...@...#";
+	map += L"##.............#.......#";
+	map += L"#......#########.......#";
+	map += L"#......................#";
+	map += L"#......................#";
+	map += L"##########llll##########";
 	
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
@@ -43,14 +72,22 @@ int main()
 	Player player(5, 0, 3, screen);
 	//Wall wall(11, 10, 5, 5, screen);
 	vector<Wall> walls;
+	vector<Lava> lavas;
 	for (int nx = 0; nx < nMapWidth; nx++)
 		for (int ny = 0; ny < nMapHeight; ny++)
 		{
 			if (map[ny * nMapWidth + nx] == '#') {
 				walls.push_back(Wall(nx * 5, ny * 4, 5, 4, screen));
 			}
+			else if (map[ny * nMapWidth + nx] == '@') {
+				player.setPos(nx * 5, ny * 4);
+			}
+			else if (map[ny * nMapWidth + nx] == 'l') {
+				lavas.push_back(Lava(nx * 5, ny * 4, 5, 4, screen));
+			}
 
 		}
+	//walls.push_back(Lava(12, 12, 12, 112, screen));
 	/*walls.push_back(Wall(5, 20, 5, 5, screen));
 	walls.push_back(Wall(10, 20, 5, 5, screen));
 	walls.push_back(Wall(15, 20, 5, 5, screen));
@@ -81,7 +118,7 @@ int main()
 		{
 			//player.move(0, -fSpeed * fElapsedTime);
 			//if(player)
-			fGravVel = -29;
+			fGravVel = -39;
 			
 		}
 		player.move(0, fGravVel * fElapsedTime, walls);
@@ -118,8 +155,11 @@ int main()
 		for (Wall i: walls) {
 			i.draw();
 		}
+		for (Lava i : lavas) {
+			i.draw();
+		}
 		//wall.draw();
-		fGravVel = min(fGravVel + fGravity * fElapsedTime, 250.0f);
+		fGravVel = min(fGravVel + fGravity * fElapsedTime, 200.0f);
 		// Display Map
 		/*for (int nx = 0; nx < nMapWidth; nx++)
 			for (int ny = 0; ny < nMapWidth; ny++)

@@ -8,12 +8,12 @@ protected:
 	int width, height;
 	bool dead;
 	wchar_t* screen;
-	bool check_collision(Entity& entity);
+	virtual bool check_collision(Entity& entity);
 	virtual bool check_collisions();
 public:
 	float getX();
 	float getY();
-	void draw();
+	virtual void draw();
 	void die();
 	void setPos(float x, float y);
 	void setX(float x);

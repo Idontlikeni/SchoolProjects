@@ -1,9 +1,8 @@
-﻿  Entity.cpp
-  Player.cpp
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\Player.cpp(37,20): warning C4018: <: несоответствие типов со знаком и без знака
-  Wall.cpp
-  console_game_2.cpp
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(50,37): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(50,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-  Создание кода...
+﻿  console_game_2.cpp
+C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(80,37): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(80,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(83,30): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(83,22): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(86,37): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(86,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
   console_game_2.vcxproj -> C:\Users\Студент\source\repos\C-plus\console_game_2\Debug\console_game_2.exe

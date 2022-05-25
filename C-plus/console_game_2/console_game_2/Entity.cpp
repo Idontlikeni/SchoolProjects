@@ -29,7 +29,7 @@ float Entity::getY()
 void Entity::draw()
 {
 	short nShade = ' ';
-	nShade = 0x2592;
+	nShade = 0x2593;
 	for (int i = 0; i < height; i++)
 	{
 		for (int j = 0; j < width; j++) {
