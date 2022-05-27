@@ -4,13 +4,18 @@ class Player: public Entity
 {
 private:
 	int lives, max_lives;
-	bool dead;
+	bool dead, new_lvl;
 	wchar_t* screen; 
 
 public:
 	short nShade;
 	int getLives();
-	void draw();
+	bool is_new();
+	bool is_dead();
+	void arise();
+	void lvl_swotched();
+	virtual void draw();
+	virtual int check_collision(Entity& entity);
 	void die();
 	void setLives(int lives);
 	bool check_collisions(std::vector<Entity*>& walls);

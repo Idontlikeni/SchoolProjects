@@ -1,5 +1,5 @@
 #include "Entity.h"
-bool Entity::check_collision(Entity& entity)
+int Entity::check_collision(Entity& entity)
 {
 	float selfx2 = x + width - 1;
 	float selfy2 = y + height - 1;
@@ -24,6 +24,10 @@ float Entity::getX()
 float Entity::getY()
 {
 	return y;
+}
+
+int Entity::getId() {
+	return id;
 }
 
 void Entity::draw()
@@ -78,4 +82,10 @@ Entity::Entity()
 	dead = false;
 	width = 0;
 	height = 0;
+	id = -1;
+}
+
+Entity::~Entity() {
+	screen = nullptr;
+	//delete Entity;
 }

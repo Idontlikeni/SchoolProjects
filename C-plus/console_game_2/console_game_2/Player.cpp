@@ -36,13 +36,35 @@ void Player::setLives(int lives)
 	this->lives = lives;
 }
 
-bool Player::check_collisions(std::vector<Entity*>& walls) {
-	for (int i = 0; i < walls.size(); i++) {
-		if (check_collision(*walls[i])) {
-			return true;
-		}
+int Player::check_collision(Entity& entity) {
+	if (Entity::check_collision(entity)) {
+		return entity.getId();
 	}
-	return false;
+	else return 0;
+}
+
+bool Player::check_collisions(std::vector<Entity*>& walls) {
+	bool coll = false;
+	for (int i = 0; i < walls.size(); i++) {
+		switch (check_collision(*walls[i]))
+		{
+			case 1:
+				new_lvl = true;
+				break;
+			case 2:
+				dead = true;
+				break;
+			case 3:
+				coll = true;
+				break;
+			default:
+				break;
+		}
+		/*if (check_collision(*walls[i])) {
+			return true;
+		}*/
+	}
+	return coll;
 }
 
 bool Player::move(float dx, float dy, std::vector<Entity*>& walls)
@@ -54,15 +76,23 @@ bool Player::move(float dx, float dy, std::vector<Entity*>& walls)
 		y -= dy;
 		return true;
 	}
-	/*for (int i = 0; i < walls.size(); i++) {
-		if (check_collision(walls[i])) {
-			x -= dx;
-			y -= dy;
-			return true;
-		}
-	}*/
-	
 	return false;
+}
+
+bool Player::is_new() {
+	return new_lvl;
+}
+
+bool Player::is_dead() {
+	return dead;
+}
+
+void Player::arise() {
+	dead = false;
+}
+
+void Player::lvl_swotched() {
+	new_lvl = false;
 }
 
 Player::Player(float x, float y, int lives, wchar_t* screen)
@@ -76,4 +106,5 @@ Player::Player(float x, float y, int lives, wchar_t* screen)
 	width = 5;
 	height = 3;
 	nShade = 0x2588;
+	new_lvl = false;
 }

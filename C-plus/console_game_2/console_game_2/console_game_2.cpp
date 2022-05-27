@@ -4,8 +4,10 @@
 #include <chrono>
 #include <stdio.h>
 #include <Windows.h>
+#include <tuple>
 #include "Player.h"
 #include "Lava.h"
+#include "Exit.h"
 int nScreenWidth = 120;			// Console Screen Size X (columns)
 int nScreenHeight = 40;			// Console Screen Size Y (rows)
 int nMapWidth = 24;				// World Dimensions
@@ -19,7 +21,27 @@ float fSpeed = 50.0f;			// Walking Speed
 float fGravity = 120.0f;
 float fGravVel = 0.0f;
 using namespace std;
-
+tuple<int, int> generate_map(wstring& map, vector<Entity*>& walls, wchar_t* screen) {
+	tuple<int, int> pos;
+	
+	for (int nx = 0; nx < nMapWidth; nx++)
+		for (int ny = 0; ny < nMapHeight; ny++)
+		{
+			if (map[ny * nMapWidth + nx] == '#') {
+				walls.push_back(new Wall(nx * 5, ny * 4, 5, 4, screen));
+			}
+			else if (map[ny * nMapWidth + nx] == '@') {
+				pos = make_tuple(nx * 5, ny * 4);
+			}
+			else if (map[ny * nMapWidth + nx] == 'l') {
+				walls.push_back(new Lava(nx * 5, ny * 4, 5, 4, screen));
+			}
+			else if (map[ny * nMapWidth + nx] == 'e') {
+				walls.push_back(new Exit(nx * 5, ny * 4 - 1, 5, 5, screen));
+			}
+		}
+	return pos;
+}
 int main()
 {
 	// Create Screen Buffer
@@ -29,25 +51,58 @@ int main()
 	DWORD dwBytesWritten = 0;
 	bool in_air = false;
 	// Create Map of world space # = wall block, . = space
+	vector <wstring>maps;
 	wstring map;
-	map += L"#......##......##......#";
+	int curr_map = 0;
+	map += L"#......................#";
 	map += L"#......##......#.......#";
 	map += L"###............#...@...#";
-	map += L"##.............#.......#";
+	map += L"##............e#.......#";
 	map += L"#......#########.......#";
 	map += L"#......................#";
 	map += L"#......................#";
+	map += L"#######lllllllll########";
+	maps.push_back(map);
+
+	map = L"";
+	map += L"#......................#";
+	map += L"#......................#";
+	map += L"#......................#";
+	map += L"#...e...........###....#";
+	map += L"#...###................#";
+	map += L"#.........###.........@#";
+	map += L"#......................#";
+	map += L"#lllllllllllllllllll####";
+	maps.push_back(map);
+
+	map = L"";
+	map += L"#......................#";
+	map += L"#...####..#...#..###...#";
+	map += L"#...#.....##..#..#..#..#";
+	map += L"#...####..#.#.#..#..#..#";
+	map += L"#...#.....#..##..#..#..#";
+	map += L"#...####..#...#..###...#";
+	map += L"#...........@..........#";
 	map += L"########################";
-	
+	maps.push_back(map);
+
+	map = L"";
+	map += L"#......................#";
+	map += L"#......##......#.......#";
+	map += L"###............#...@...#";
+	map += L"##............e#.......#";
+	map += L"#......#########.......#";
+	map += L"#......................#";
+	map += L"#......................#";
+	map += L"#######lllllllll########";
+
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
 	int c = 0;
 
 	Player player(5, 0, 3, screen);
-	//Wall wall(11, 10, 5, 5, screen);
 	vector<Entity *> walls;
-	//vector<Lava> lavas;
-	for (int nx = 0; nx < nMapWidth; nx++)
+	/*for (int nx = 0; nx < nMapWidth; nx++)
 		for (int ny = 0; ny < nMapHeight; ny++)
 		{
 			if (map[ny * nMapWidth + nx] == '#') {
@@ -59,8 +114,13 @@ int main()
 			else if (map[ny * nMapWidth + nx] == 'l') {
 				walls.push_back(new Lava(nx * 5, ny * 4, 5, 4, screen));
 			}
+			else if (map[ny * nMapWidth + nx] == 'e') {
+				walls.push_back(new Exit(nx * 5, ny * 4 - 1, 5, 5, screen));
+			}
 
-		}
+		}*/
+	tuple<int, int> pos = generate_map(map, walls, screen);
+	player.setPos(get<0>(pos), get<1>(pos));
 	//walls.push_back(Lava(12, 12, 12, 112, screen));
 	/*walls.push_back(Wall(5, 20, 5, 5, screen));
 	walls.push_back(Wall(10, 20, 5, 5, screen));
@@ -76,7 +136,7 @@ int main()
 		tp1 = tp2;
 		float fElapsedTime = elapsedTime.count();
 
-
+		
 		// Handle CCW Rotation
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
 			player.move(-fSpeed * fElapsedTime, 0, walls);
@@ -110,7 +170,7 @@ int main()
 		//player.setY(player.getY() - 1);
 
 		if (player.move(0, fGravVel * fElapsedTime, walls)) {
-  			player.nShade = 0x2592;
+  			//player.nShade = 0x2592;
 			if (GetAsyncKeyState((unsigned short)'W') & 0x8000 || GetAsyncKeyState((unsigned short)' ') & 0x8000)
 			{
 				//player.move(0, -fSpeed * fElapsedTime, walls);
@@ -123,10 +183,13 @@ int main()
 				//player.setY(player.getY() - 1);
 			}else fGravVel = 1;
 		}
-		else {
+		/*else {
 			player.nShade = 0x2588;
-		}
+		}*/
 		
+		
+
+
 
 		for (int x = 0; x < nScreenWidth; x++)
 		{
@@ -153,7 +216,7 @@ int main()
 		// Display Stats
 		short nShade = ' ';
 		nShade = 0x2588;
-		swprintf_s(screen, 40, L"G=%3.2f, G=%3.2f, A=%3.2f FPS=%3.2f ", fGravVel, fGravVel, fPlayerA, 1.0f / fElapsedTime);
+		
 		//screen[nScreenWidth + (c / 20 % nScreenWidth)] = nShade;
 		player.draw();
 		for (Entity* i: walls) {
@@ -161,6 +224,7 @@ int main()
 		}
 		//wall.draw();
 		fGravVel = min(fGravVel + fGravity * fElapsedTime, 200.0f);
+
 		// Display Map
 		/*for (int nx = 0; nx < nMapWidth; nx++)
 			for (int ny = 0; ny < nMapWidth; ny++)
@@ -171,11 +235,28 @@ int main()
 
 		// Display Frame
 		screen[nScreenWidth * nScreenHeight - 1] = '\0';
+		if (player.is_dead()) {
+			player.setPos(get<0>(pos), get<1>(pos));
+			player.arise();
+			fGravVel = 0;
+		}
+
+		if (player.is_new()) {
+			curr_map = (curr_map + 1) % 3;
+			for (auto p : walls)
+			{
+				delete p;
+			}
+			walls.clear();
+			pos = generate_map(maps[curr_map] , walls, screen);
+			player.setPos(get<0>(pos), get<1>(pos));
+			player.lvl_swotched();//swotched XD
+			fGravVel = 0;
+		}
+		swprintf_s(screen, 40, L"X=%3.2f, Y=%3.2f, FPS=%3.2f ", player.getX(), player.getY(), 1.0f / fElapsedTime);
 		WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth * nScreenHeight, { 0,0 }, &dwBytesWritten);
 
 	}
 
 	return 0;
 }
-
-// That's It!! - Jx9
