@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <Windows.h>
 #include "Player.h"
+#include "Lava.h"
 int nScreenWidth = 120;			// Console Screen Size X (columns)
 int nScreenHeight = 40;			// Console Screen Size Y (rows)
 int nMapWidth = 24;				// World Dimensions
@@ -18,33 +19,6 @@ float fSpeed = 50.0f;			// Walking Speed
 float fGravity = 120.0f;
 float fGravVel = 0.0f;
 using namespace std;
-
-class Lava: public Wall
-{
-public:
-	void draw() {
-		short nShade = ' ';
-		nShade = 0x2591;
-		for (int i = 0; i < height; i++)
-		{
-			for (int j = 0; j < width; j++) {
-				screen[(i + (int)y) * 120 + j + (int)x] = nShade;
-			}
-		}
-	}
-	Lava(float x, float y, int width, int height, wchar_t* screen) :Wall(x, y, width, height, screen) {}
-	
-};
-
-class Exit : public Entity
-{
-	Exit(float x, float y, int width, int height, wchar_t* screen) :Entity(x, y, width, height, screen) {}
-};
-
-class Point : public Entity
-{
-	Point(float x, float y, int width, int height, wchar_t* screen) :Entity(x, y, width, height, screen) {}
-};
 
 int main()
 {
@@ -71,19 +45,19 @@ int main()
 
 	Player player(5, 0, 3, screen);
 	//Wall wall(11, 10, 5, 5, screen);
-	vector<Wall> walls;
-	vector<Lava> lavas;
+	vector<Entity *> walls;
+	//vector<Lava> lavas;
 	for (int nx = 0; nx < nMapWidth; nx++)
 		for (int ny = 0; ny < nMapHeight; ny++)
 		{
 			if (map[ny * nMapWidth + nx] == '#') {
-				walls.push_back(Wall(nx * 5, ny * 4, 5, 4, screen));
+				walls.push_back(new Wall(nx * 5, ny * 4, 5, 4, screen));
 			}
 			else if (map[ny * nMapWidth + nx] == '@') {
 				player.setPos(nx * 5, ny * 4);
 			}
 			else if (map[ny * nMapWidth + nx] == 'l') {
-				lavas.push_back(Lava(nx * 5, ny * 4, 5, 4, screen));
+				walls.push_back(new Lava(nx * 5, ny * 4, 5, 4, screen));
 			}
 
 		}
@@ -182,11 +156,8 @@ int main()
 		swprintf_s(screen, 40, L"G=%3.2f, G=%3.2f, A=%3.2f FPS=%3.2f ", fGravVel, fGravVel, fPlayerA, 1.0f / fElapsedTime);
 		//screen[nScreenWidth + (c / 20 % nScreenWidth)] = nShade;
 		player.draw();
-		for (Wall i: walls) {
-			i.draw();
-		}
-		for (Lava i : lavas) {
-			i.draw();
+		for (Entity* i: walls) {
+			i->draw();
 		}
 		//wall.draw();
 		fGravVel = min(fGravVel + fGravity * fElapsedTime, 200.0f);

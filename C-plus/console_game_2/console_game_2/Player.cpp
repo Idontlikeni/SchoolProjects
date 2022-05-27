@@ -36,16 +36,16 @@ void Player::setLives(int lives)
 	this->lives = lives;
 }
 
-bool Player::check_collisions(std::vector<Wall>& walls) {
+bool Player::check_collisions(std::vector<Entity*>& walls) {
 	for (int i = 0; i < walls.size(); i++) {
-		if (check_collision(walls[i])) {
+		if (check_collision(*walls[i])) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool Player::move(float dx, float dy, std::vector<Wall>& walls)
+bool Player::move(float dx, float dy, std::vector<Entity*>& walls)
 {
 	x += dx;
 	y += dy;

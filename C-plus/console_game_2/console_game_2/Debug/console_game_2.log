@@ -1,8 +1,8 @@
 ﻿  console_game_2.cpp
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(80,37): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(80,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(83,30): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(83,22): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(86,37): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-C:\Users\Студент\source\repos\C-plus\console_game_2\console_game_2\console_game_2.cpp(86,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-  console_game_2.vcxproj -> C:\Users\Студент\source\repos\C-plus\console_game_2\Debug\console_game_2.exe
+D:\Github\SchoolProjects\C-plus\console_game_2\console_game_2\console_game_2.cpp(54,41): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Github\SchoolProjects\C-plus\console_game_2\console_game_2\console_game_2.cpp(54,33): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Github\SchoolProjects\C-plus\console_game_2\console_game_2\console_game_2.cpp(57,30): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Github\SchoolProjects\C-plus\console_game_2\console_game_2\console_game_2.cpp(57,22): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Github\SchoolProjects\C-plus\console_game_2\console_game_2\console_game_2.cpp(60,41): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Github\SchoolProjects\C-plus\console_game_2\console_game_2\console_game_2.cpp(60,33): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  console_game_2.vcxproj -> D:\Github\SchoolProjects\C-plus\console_game_2\Debug\console_game_2.exe

@@ -141,13 +141,17 @@
   <ItemGroup>
     <ClCompile Include="console_game_2.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Exit.cpp" />
     <ClCompile Include="fpsshooter.cpp" />
+    <ClCompile Include="Lava.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="data.h" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Exit.h" />
+    <ClInclude Include="Lava.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>

@@ -13,8 +13,8 @@ public:
 	void draw();
 	void die();
 	void setLives(int lives);
-	bool check_collisions(std::vector<Wall>& walls);
-	bool move(float dx, float dy, std::vector<Wall>& walls);
+	bool check_collisions(std::vector<Entity*>& walls);
+	bool move(float dx, float dy, std::vector<Entity*>& walls);
 	Player(float x, float y, int lives, wchar_t* screen);
 };
 
